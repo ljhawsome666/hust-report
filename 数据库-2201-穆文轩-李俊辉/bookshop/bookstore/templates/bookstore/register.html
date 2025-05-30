@@ -1,0 +1,173 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>注册</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--            background-color: #f4f4f4;-->
+<!--        }-->
+
+<!--        .login-container {-->
+<!--            max-width: 400px;-->
+<!--            margin: 100px auto;-->
+<!--            padding: 30px;-->
+<!--            background-color: white;-->
+<!--            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);-->
+<!--        }-->
+
+<!--        h2 {-->
+<!--            text-align: center;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        .form-group {-->
+<!--            margin-bottom: 15px;-->
+<!--        }-->
+
+<!--        .form-group input {-->
+<!--            width: 100%;-->
+<!--            padding: 10px;-->
+<!--            font-size: 16px;-->
+<!--            border: 1px solid #ccc;-->
+<!--            border-radius: 5px;-->
+<!--        }-->
+
+<!--        .form-group button {-->
+<!--            width: 100%;-->
+<!--            padding: 10px;-->
+<!--            background-color: #2a9d8f;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 5px;-->
+<!--            font-size: 16px;-->
+<!--        }-->
+
+<!--        .form-group button:hover {-->
+<!--            background-color: #e76f51;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="login-container">-->
+<!--        <h2>注册</h2>-->
+<!--        <form method="POST">-->
+<!--            {% csrf_token %}-->
+<!--            {{ form.as_p }} &lt;!&ndash; 渲染注册表单 &ndash;&gt;-->
+<!--            <div class="form-group">-->
+<!--                <button type="submit">注册</button>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--        <p>已有账号？ <a href="{% url 'login' %}">登录</a></p>-->
+<!--    </div>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e8f5e9, #e0f7fa);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 500;
+            color: #2a9d8f;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #2a9d8f;
+            outline: none;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #2a9d8f, #264653);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .form-group button:hover {
+            background: linear-gradient(135deg, #e76f51, #d85f41);
+            transform: translateY(-2px);
+        }
+
+        p {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        p a {
+            color: #2a9d8f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>注册</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }} <!-- 渲染注册表单 -->
+            <div class="form-group">
+                <button type="submit">注册</button>
+            </div>
+        </form>
+        <p>已有账号？ <a href="{% url 'login' %}">登录</a></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书馆首页</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e8f5e9, #e0f7fa);
+            color: #333;
+        }
+
+        header {
+            background-color: #2a9d8f;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header button, header a {
+            background-color: #e76f51;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        header button:hover, header a:hover {
+            background-color: #d85f41;
+        }
+
+        .search-container {
+            margin: 20px;
+            text-align: center;
+        }
+
+        .search-container input {
+            width: 80%;
+            max-width: 500px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .search-container button {
+            padding: 10px 20px;
+            background-color: #2a9d8f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .search-container button:hover {
+            background-color: #e76f51;
+        }
+
+        #resultContainer {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .book-item a {
+            text-decoration: none;
+            color: #2a9d8f;
+            font-weight: 500;
+            font-size: 18px;
+        }
+
+        .book-item a:hover {
+            text-decoration: underline;
+        }
+
+        .best-sellers {
+            margin: 70px 0;
+            text-align: center;
+        }
+
+        .best-sellers h2 {
+            font-size: 22px;
+            color: #2a9d8f;
+             margin-bottom: 20px; /* 可以给标题和下面的书籍之间留些空隙 */
+        }
+
+        .best-sellers .book-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .best-sellers .book-item {
+            width: 150px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .best-sellers .book-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .best-sellers .book-item p {
+            font-size: 16px;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        #cartModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #cartContent {
+            background-color: white;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #cartContent ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #cartContent li {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .close-btn, .clear-cart-btn {
+            background-color: #e76f51;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .close-btn:hover, .clear-cart-btn:hover {
+            background-color: #d85f41;
+        }
+
+        .loading-spinner img {
+            display: block;
+            margin: 0 auto;
+            width: 50px;
+        }
+
+        #profileForm {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            margin: 30px auto;
+        }
+
+        #profileForm h2 {
+            font-size: 20px;
+            color: #2a9d8f;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #profileForm label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        #profileForm input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        #profileForm button {
+            width: 48%;
+            padding: 10px;
+            margin: 5px 1%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #2a9d8f;
+            color: white;
+            transition: background 0.3s ease;
+        }
+
+        #profileForm button:hover {
+            background-color: #e76f51;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>网上书店</h1>
+        <a href="/bookstore/order_list">订单信息</a>
+        <button onclick="editProfile()">个人信息</button>
+        <button onclick="viewCart()">购物车</button>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchBook" placeholder="输入书名进行搜索">
+        <button onclick="searchBooks()">搜索</button>
+    </div>
+
+    <div id="resultContainer"></div>
+    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+        <img src="https://i.imgur.com/llF5iyg.gif" alt="Loading...">
+    </div>
+
+    <div id="profileForm" style="display: none;">
+        <h2>编辑个人信息</h2>
+        <form id="profileFormElement">
+            <label for="full_name">姓名:</label>
+            <input type="text" id="full_name" name="full_name" required>
+
+            <label for="address">地址:</label>
+            <input type="text" id="address" name="address" required>
+
+            <label for="account_balance">账户余额:</label>
+            <input type="number" id="account_balance" name="account_balance" step="0.01" required>
+
+            <button type="submit">保存</button>
+            <button type="button" onclick="closeProfileForm()">取消</button>
+        </form>
+    </div>
+
+    <div id="cartModal">
+        <div id="cartContent">
+            <button class="close-btn" onclick="closeCart()">关闭</button>
+            <h2>购物车</h2>
+            <ul id="cartItems"></ul>
+            <button onclick="checkout()">结账</button>
+            <button class="clear-cart-btn" onclick="clearCart()">清空购物车</button>
+        </div>
+    </div>
+
+    <!-- 热销书籍部分 -->
+    <div class="best-sellers">
+        <h2>热销书籍</h2>
+        <div class="book-list">
+            <div class="book-item">
+                <img src="https://www.zzxxo.com/attachment/2111/thread/454_5139_99172f66d8d7720.png" alt="Book Image1" style="width: 150px; height: 200px;">
+                <p>红楼梦</p>
+            </div>
+            <div class="book-item">
+                <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.RL8FaNjf-uj6mFMMJwJw2AAAAA?rs=1&pid=ImgDetMain" alt="Book Image2" style="width: 150px; height: 200px;">
+                <p>西游记</p>
+            </div>
+            <div class="book-item">
+                <img src="https://tse3-mm.cn.bing.net/th/id/OIP-C.WVMbmqHUb4XZJFyawSPHHQHaJ5?w=139&h=186&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Book Image3" style="width: 150px; height: 200px;">
+                <p>水浒传</p>
+            </div>
+            <div class="book-item">
+                <img src="https://tse2-mm.cn.bing.net/th/id/OIP-C.5ulfKnSSftg1ojmovEjnmwHaK0?w=116&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Book Image4" style="width: 150px; height: 200px;">
+                <p>三国演义</p>
+            </div>
+            <div class="book-item">
+                <img src="https://tse1-mm.cn.bing.net/th/id/OIP-C.vTC_McHafX-lnRAoAehOOwHaKC?w=161&h=219&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Book Image5" style="width: 150px; height: 200px;">
+                <p>珠宝鉴赏</p>
+            </div>
+            <div class="book-item">
+                <img src="https://tse3-mm.cn.bing.net/th/id/OIP-C.rskWBMA0tq6zgquGysYPhwHaHa?w=189&h=189&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Book Image6" style="width: 150px; height: 200px;">
+                <p>语言与艺术</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = []; // 存储购物车中的书籍
+
+        function editProfile() {
+            const customerData = {
+                full_name: "{{ customer.full_name }}",
+                address: "{{ customer.address }}",
+                account_balance: "{{ customer.account_balance }}"
+            };
+
+            document.getElementById('full_name').value = customerData.full_name;
+            document.getElementById('address').value = customerData.address;
+            document.getElementById('account_balance').value = customerData.account_balance;
+
+            document.getElementById('profileForm').style.display = 'block';
+        }
+
+        function closeProfileForm() {
+            document.getElementById('profileForm').style.display = 'none';
+        }
+
+        document.getElementById('profileFormElement').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const fullName = document.getElementById('full_name').value;
+            const address = document.getElementById('address').value;
+            const accountBalance = document.getElementById('account_balance').value;
+
+            fetch('/bookstore/update_profile/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    full_name: fullName,
+                    address: address,
+                    account_balance: accountBalance
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('个人信息更新成功！');
+                    closeProfileForm();
+                } else {
+                    alert('更新失败，请稍后再试。');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('更新时发生错误，请稍后重试。');
+            });
+        });
+
+        function searchBooks() {
+            var query = document.getElementById('searchBook').value;
+            if (!query) {
+                alert('请输入书名进行搜索');
+                return;
+            }
+
+            document.getElementById('loadingSpinner').style.display = 'block';
+
+            fetch(`/bookstore/search_books/?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    var resultContainer = document.getElementById('resultContainer');
+                    var loadingSpinner = document.getElementById('loadingSpinner');
+
+                    loadingSpinner.style.display = 'none';
+                    resultContainer.innerHTML = '';
+
+                    if (data.books && data.books.length > 0) {
+                        data.books.forEach(book => {
+                            resultContainer.innerHTML += `
+                                <div class="book-item">
+                                    <a href="#" onclick="viewBookDetails(${book.id})">${book.title}</a>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        resultContainer.innerHTML = '<div class="error-message">暂无此书</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('搜索过程中发生错误，请稍后重试');
+                });
+        }
+
+        function viewBookDetails(bookId) {
+            fetch(`/bookstore/book/${bookId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    var resultContainer = document.getElementById('resultContainer');
+                    resultContainer.innerHTML = `
+                        <div class="book-info">
+                            <p><strong>书名:</strong> ${data.title}</p>
+                            <p><strong>作者:</strong> ${data.authors}</p>
+                            <p><strong>出版社:</strong> ${data.publisher.name}</p>
+                            <p><strong>价格:</strong> ¥${parseFloat(data.price).toFixed(2)}</p>
+                            <p><strong>库存量:</strong> ${data.stock}</p>
+                            <div id="quantityContainer" class="quantity-container">
+                                <input type="number" id="quantity" name="quantity" value="1" min="1" step="1">
+                                <button onclick="addToCart(${data.id}, '${data.title}')">加入购物车</button>
+                                <button onclick="window.location.href='/library_home'">返回主页</button> <!-- 返回主页按钮 -->
+                            </div>
+                        </div>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('获取书籍详情时发生错误');
+                });
+        }
+
+        function buyBook(bookId) {
+            document.getElementById('quantityContainer').style.display = 'block';
+        }
+
+        function addToCart(bookId, bookTitle) {
+            var quantity = document.getElementById('quantity').value;
+            cart.push({ bookId, bookTitle, quantity });
+
+            alert(`加入购物车: 书籍: ${bookTitle}, 数量: ${quantity}`);
+        }
+
+        function viewCart() {
+            var cartItems = document.getElementById('cartItems');
+            cartItems.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<li>购物车为空</li>';
+            } else {
+                cart.forEach(item => {
+                    cartItems.innerHTML += `
+                        <li>${item.bookTitle} - 数量: ${item.quantity}</li>
+                    `;
+                });
+            }
+
+            document.getElementById('cartModal').style.display = 'block';
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function clearCart() {
+            cart = [];
+            viewCart(); // 更新购物车显示
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('购物车为空，无法结账');
+                return;
+            }
+
+            let orderData = {
+                cart: cart.map(item => ({
+                    bookId: item.bookId,
+                    bookTitle: item.bookTitle,
+                    quantity: parseInt(item.quantity) // 将 quantity 转换为数字
+                }))
+            };
+
+            // 将购物车数据发送到后端生成订单
+            fetch('/bookstore/create_order/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(orderData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+
+                if (data.success) {
+                    alert('订单生成成功，订单号: ' + data.order_id);
+                    // 清空购物车
+                    cart = [];
+                    viewCart(); // 更新购物车显示
+                }
+                else {
+                    alert('结账失败，请稍后再试。');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('结账时发生错误，请稍后重试。');
+            });
+        }
+    </script>
+</body>
+</html>

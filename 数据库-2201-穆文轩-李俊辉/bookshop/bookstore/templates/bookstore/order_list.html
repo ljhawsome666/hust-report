@@ -1,0 +1,151 @@
+<!--&lt;!&ndash; order_list.html &ndash;&gt;-->
+<!--<h1>我的订单</h1>-->
+<!--{% if orders %}-->
+<!--    <ul>-->
+<!--        {% for order in orders %}-->
+<!--            <li>-->
+<!--                订单号: {{ order.id }} - 总金额: ¥{{ order.total_amount }} - 状态: {{ order.status }}-->
+<!--                <a href="{% url 'order_detail' order.id %}">查看详情</a>-->
+<!--            </li>-->
+<!--        {% endfor %}-->
+<!--    </ul>-->
+<!--{% else %}-->
+<!--    <p>您没有订单。</p>-->
+<!--{% endif %}-->
+
+<!--&lt;!&ndash; 返回按钮 &ndash;&gt;-->
+<!--<a href="javascript:history.back()">返回</a>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的订单</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f0f4c3, #e0f7fa);
+            color: #333;
+        }
+
+        header {
+            background-color: #3949ab;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .order-container {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-container h2 {
+            text-align: center;
+            color: #3949ab;
+            margin-bottom: 20px;
+        }
+
+        .order-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .order-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f5f5f5;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-list li span {
+            flex: 1;
+            font-size: 16px;
+        }
+
+        .order-list li a {
+            text-decoration: none;
+            background-color: #3949ab;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .order-list li a:hover {
+            background-color: #5c6bc0;
+        }
+
+        .no-orders {
+            text-align: center;
+            font-size: 18px;
+            color: #757575;
+            margin-top: 20px;
+        }
+
+        .back-button {
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            background-color: #e57373;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            max-width: 120px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #ef5350;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>我的订单</h1>
+    </header>
+
+    <div class="order-container">
+        {% if orders %}
+            <h2>订单列表</h2>
+            <ul class="order-list">
+                {% for order in orders %}
+                    <li>
+                        <span>订单号: {{ order.id }}</span>
+                        <span>总金额: ¥{{ order.total_amount }}</span>
+                        <span>状态: {{ order.status }}</span>
+                        <a href="{% url 'order_detail' order.id %}">查看详情</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-orders">您没有订单。</p>
+        {% endif %}
+    </div>
+
+    <a href="javascript:history.back()" class="back-button">返回</a>
+</body>
+</html>
