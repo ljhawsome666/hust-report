@@ -1,0 +1,170 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>个人信息</title>-->
+<!--    <style>-->
+<!--        /* 这里可以加入一些样式来美化页面 */-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <header>-->
+<!--        <h1>个人信息</h1>-->
+<!--        <a href="/library_home" class="order-button">返回首页</a>-->
+<!--    </header>-->
+
+<!--    <form method="POST" action="/profile">-->
+<!--        {% csrf_token %}-->
+<!--        <div>-->
+<!--            <label for="full_name">姓名:</label>-->
+<!--            <input type="text" id="full_name" name="full_name" value="{{ customer.full_name }}" required>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <label for="address">地址:</label>-->
+<!--            <input type="text" id="address" name="address" value="{{ customer.address }}" required>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <label for="account_balance">账户余额:</label>-->
+<!--            <input type="number" id="account_balance" name="account_balance" value="{{ customer.account_balance }}" required>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <label for="credit_rating">信用评级:</label>-->
+<!--            <input type="text" id="credit_rating" name="credit_rating" value="{{ customer.credit_rating.level }}" disabled>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <button type="submit">更新信息</button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人信息</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .order-button {
+            color: white;
+            text-decoration: none;
+            background-color: #333;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .order-button:hover {
+            background-color: #555;
+        }
+
+        form {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form div {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        @media screen and (max-width: 600px) {
+            .order-button {
+                display: block;
+                margin: 10px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>个人信息</h1>
+        <a href="/library_home" class="order-button">返回首页</a>
+    </header>
+
+    <form method="POST" action="/profile">
+        {% csrf_token %}
+        <div>
+            <label for="full_name">姓名:</label>
+            <input type="text" id="full_name" name="full_name" value="{{ customer.full_name }}" required>
+        </div>
+        <div>
+            <label for="address">地址:</label>
+            <input type="text" id="address" name="address" value="{{ customer.address }}" required>
+        </div>
+        <div>
+            <label for="account_balance">账户余额:</label>
+            <input type="number" id="account_balance" name="account_balance" value="{{ customer.account_balance }}" required>
+        </div>
+        <div>
+            <label for="credit_rating">信用评级:</label>
+            <input type="text" id="credit_rating" name="credit_rating" value="{{ customer.credit_rating.level }}" disabled>
+        </div>
+        <div>
+            <button type="submit">更新信息</button>
+        </div>
+    </form>
+</body>
+</html>
