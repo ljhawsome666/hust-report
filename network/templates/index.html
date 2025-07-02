@@ -1,0 +1,261 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>实时网络流量地图</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial;
+            overflow: hidden;
+        }
+
+        #map {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #pci-details {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .pci-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .pci-item {
+            margin-bottom: 10px;
+            padding: 8px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .pci-time {
+            font-weight: bold;
+            color: #d94e5d;
+        }
+
+        .pci-protocol {
+            color: #50a3ba;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="pci-details" style="display: none;">
+        <span class="close-btn" onclick="document.getElementById('pci-details').style.display='none'">×</span>
+        <div class="pci-header">PCI信息 - <span id="pci-ip"></span></div>
+        <div id="pci-container"></div>
+    </div>
+
+    <script>
+        // 初始化地图
+        const mapChart = echarts.init(document.getElementById('map'));
+        let totalBytes = 0;
+        let selectedIp = null;
+
+        // 连接WebSocket服务器
+        const socket = io('http://localhost:5000');
+
+        // 处理流量更新
+        socket.on('traffic_update', function (data) {
+            updateMap(data.data);
+        });
+
+        function updateMap(trafficData) {
+            // 计算总流量
+            totalBytes = trafficData.reduce((sum, item) => sum + item.bytes, 0);
+
+            const option = {
+                title: {
+                    text: '实时网络流量地图',
+                    subtext: `总流量: ${formatBytes(totalBytes)}`,
+                    left: 'center',
+                    textStyle: {
+                        fontSize: 18,
+                        color: '#333'
+                    }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: params => {
+                        if (params.data) {
+                            return `
+                                    <div style="font-weight:bold">${params.data.city}</div>
+                                    <div>IP: ${params.data.ip}</div>
+                                    <div>国家: ${params.data.country}</div>
+                                    <div>流量: ${formatBytes(params.data.bytes)}</div>
+                                    <div>包数: ${params.data.packets}</div>
+                                    <div style="margin-top:5px;color:#d94e5d">点击查看PCI详情</div>
+                                `;
+                        }
+                        return params.name;
+                    }
+                },
+                visualMap: {
+                    min: 0,
+                    max: Math.max(...trafficData.map(d => d.bytes)),
+                    text: ['高流量', '低流量'],
+                    realtime: false,
+                    calculable: true,
+                    inRange: {
+                        color: ['#50a3ba', '#eac736', '#d94e5d']
+                    },
+                    textStyle: {
+                        color: '#333'
+                    }
+                },
+                series: [{
+                    name: '流量分布',
+                    type: 'scatter',
+                    coordinateSystem: 'geo',
+                    data: trafficData.map(item => ({
+                        name: item.city,
+                        value: [item.lon, item.lat, item.bytes],
+                        ip: item.ip,
+                        country: item.country,
+                        city: item.city,
+                        bytes: item.bytes,
+                        packets: item.packets,
+                        pci_info: item.pci_info
+                    })),
+                    symbolSize: function (val) {
+                        return Math.min(30, Math.max(8, Math.log(val[2]) * 3));
+                    },
+                    label: {
+                        show: true,
+                        formatter: '{b}',
+                        position: 'right',
+                        color: '#333'
+                    },
+                    itemStyle: {
+                        color: '#ddb926'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true
+                        },
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            };
+
+            // 加载中国地图
+            fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json')
+                .then(response => response.json())
+                .then(mapJson => {
+                    echarts.registerMap('china', mapJson);
+                    option.geo = {
+                        map: 'china',
+                        roam: true,
+                        zoom: 1.2,
+                        label: {
+                            show: true,
+                            color: '#333',
+                            fontSize: 10
+                        },
+                        itemStyle: {
+                            areaColor: '#f0f8ff',
+                            borderColor: '#404a59',
+                            borderWidth: 0.5
+                        },
+                        emphasis: {
+                            label: {
+                                show: true
+                            },
+                            itemStyle: {
+                                areaColor: '#e6f7ff'
+                            }
+                        }
+                    };
+                    mapChart.setOption(option);
+
+                    // 添加点击事件
+                    mapChart.on('click', function (params) {
+                        if (params.data) {
+                            selectedIp = params.data.ip;
+                            showPciDetails(params.data.pci_info, params.data.ip);
+                        }
+                    });
+                });
+        }
+
+        function formatBytes(bytes) {
+            if (bytes >= 1000000000) return (bytes / 1000000000).toFixed(2) + ' GB';
+            if (bytes >= 1000000) return (bytes / 1000000).toFixed(2) + ' MB';
+            if (bytes >= 1000) return (bytes / 1000).toFixed(2) + ' KB';
+            return bytes + ' B';
+        }
+
+        function showPciDetails(pciInfo, ip) {
+            if (!pciInfo || pciInfo.length === 0) {
+                alert('该IP没有可用的PCI信息');
+                return;
+            }
+
+            document.getElementById('pci-ip').textContent = ip;
+            const container = document.getElementById('pci-container');
+            container.innerHTML = '';
+
+            pciInfo.forEach(item => {
+                const pciItem = document.createElement('div');
+                pciItem.className = 'pci-item';
+
+                let flagsInfo = '';
+                if (item.flags !== 'N/A') {
+                    flagsInfo = `<div>Flags: ${item.flags}</div>`;
+                }
+
+                pciItem.innerHTML = `
+                        <div class="pci-time">${item.time}</div>
+                        <div>协议: <span class="pci-protocol">${item.protocol}</span></div>
+                        <div>源端口: ${item.src_port}</div>
+                        <div>目标端口: ${item.dst_port}</div>
+                        ${flagsInfo}
+                        <div>大小: ${formatBytes(item.size)}</div>
+                    `;
+
+                container.appendChild(pciItem);
+            });
+
+            document.getElementById('pci-details').style.display = 'block';
+        }
+
+        // 窗口大小变化时重绘图表
+        window.addEventListener('resize', function () {
+            mapChart.resize();
+        });
+    </script>
+</body>
+</html>
